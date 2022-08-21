@@ -32,8 +32,8 @@ export default function Conversion(props) {
         </Text>
       </Flex>
       <Box px="11px">
-        {tweets.map(({ name, url }) => (
-          <Flex mb="20px">
+        {tweets.map(({ name, url, tweet_volume }) => (
+          <Flex mb="20px" justifyContent={"space-between"}>
             <a href={url} target="_blank">
               <Text
                 fontWeight="bold"
@@ -44,6 +44,15 @@ export default function Conversion(props) {
                 {name}
               </Text>
             </a>
+
+            <Text
+              fontWeight="bold"
+              color={textColor}
+              fontSize="md"
+              textAlign="start"
+            >
+              {tweet_volume}
+            </Text>
           </Flex>
         ))}
       </Box>

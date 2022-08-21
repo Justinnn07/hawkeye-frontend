@@ -10,25 +10,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 
-export default function Settings() {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const { pathname } = useLocation();
-
-  useEffect(() => {
-    setLoading(true);
-    fetch(
-      pathname === "/news-channels"
-        ? "https://hawkeye-1.herokuapp.com/channel"
-        : "https://hawkeye-1.herokuapp.com/website"
-    )
-      .then((res) => res.json())
-      .then((res) => {
-        setData(res);
-        setLoading(false);
-      });
-  }, [pathname]);
-  console.log(data);
+export default function Settings({ data, pathname }) {
   // Chakra Color Mode
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
@@ -39,9 +21,9 @@ export default function Settings() {
       >
         <ComplexTable
           columnsData={columnsDataComplex}
-          tableData={data}
-          pathname={pathname}
-          loading={loading}
+          tableData={
+            pathname === "/web-channels" ? data?.website : data?.channel
+          }
         />
       </SimpleGrid>
     </Box>

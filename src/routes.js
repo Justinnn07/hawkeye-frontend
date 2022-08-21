@@ -17,14 +17,14 @@ const routes = [
     layout: "/",
     path: "/",
     icon: <Icon as={MdHome} width="20px" height="20px" color="inherit" />,
-    component: <MainDashboard />,
+    Component: MainDashboard,
   },
   {
     name: "News Channels",
     layout: "/",
     icon: <Icon as={BsNewspaper} width="20px" height="20px" color="inherit" />,
     path: "/news-channels",
-    component: <DataTables />,
+    Component: DataTables,
   },
   {
     name: "Web Channels",
@@ -33,14 +33,7 @@ const routes = [
       <Icon as={AiOutlineGlobal} width="20px" height="20px" color="inherit" />
     ),
     path: "/web-channels",
-    component: <DataTables />,
-  },
-  {
-    name: "Profile",
-    layout: "/",
-    path: "/profile",
-    icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
-    component: <Profile />,
+    Component: DataTables,
   },
 ];
 

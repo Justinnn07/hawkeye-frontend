@@ -27,6 +27,7 @@ import {
   Flex,
   FormLabel,
   Icon,
+  Progress,
   Select,
   SimpleGrid,
   useColorModeValue,
@@ -60,7 +61,7 @@ import {
 import tableDataCheck from "views/admin/default/variables/tableDataCheck.json";
 import tableDataComplex from "views/admin/default/variables/tableDataComplex.json";
 
-export default function UserReports() {
+export default function UserReports({ data }) {
   // Chakra Color Mode
   const brandColor = useColorModeValue("brand.500", "white");
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
@@ -75,113 +76,84 @@ export default function UserReports() {
       });
   }, []);
   return (
-    <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
-      <SimpleGrid
-        columns={{ base: 1, md: 2, lg: 3, "2xl": 6 }}
-        gap="20px"
-        mb="20px"
-      >
-        <MiniStatistics
-          startContent={
-            <IconBox
-              w="56px"
-              h="56px"
-              bg={boxBg}
-              icon={
-                <Icon w="32px" h="32px" as={MdBarChart} color={brandColor} />
+    <>
+      {data.channel ? (
+        <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
+          <SimpleGrid
+            columns={{ base: 1, md: 2, lg: 3, "2xl": 2 }}
+            gap="20px"
+            mb="20px"
+          >
+            <MiniStatistics
+              startContent={
+                <IconBox
+                  w="56px"
+                  h="56px"
+                  bg={boxBg}
+                  icon={
+                    <Icon
+                      w="32px"
+                      h="32px"
+                      as={MdBarChart}
+                      color={brandColor}
+                    />
+                  }
+                />
               }
+              name="Total News Channels"
+              value={data?.channel?.length}
             />
-          }
-          name="Earnings"
-          value="$350.4"
-        />
-        <MiniStatistics
-          startContent={
-            <IconBox
-              w="56px"
-              h="56px"
-              bg={boxBg}
-              icon={
-                <Icon w="32px" h="32px" as={MdAttachMoney} color={brandColor} />
-              }
-            />
-          }
-          name="Spend this month"
-          value="$642.39"
-        />
-        <MiniStatistics growth="+23%" name="Sales" value="$574.34" />
-        <MiniStatistics
-          endContent={
-            <Flex me="-16px" mt="10px">
-              <FormLabel htmlFor="balance">
-                <Avatar src={Usa} />
-              </FormLabel>
-              <Select
-                id="balance"
-                variant="mini"
-                mt="5px"
-                me="0px"
-                defaultValue="usd"
-              >
-                <option value="usd">USD</option>
-                <option value="eur">EUR</option>
-                <option value="gba">GBA</option>
-              </Select>
-            </Flex>
-          }
-          name="Your balance"
-          value="$1,000"
-        />
-        <MiniStatistics
-          startContent={
-            <IconBox
-              w="56px"
-              h="56px"
-              bg="linear-gradient(90deg, #4481EB 0%, #04BEFE 100%)"
-              icon={<Icon w="28px" h="28px" as={MdAddTask} color="white" />}
-            />
-          }
-          name="New Tasks"
-          value="154"
-        />
-        <MiniStatistics
-          startContent={
-            <IconBox
-              w="56px"
-              h="56px"
-              bg={boxBg}
-              icon={
-                <Icon w="32px" h="32px" as={MdFileCopy} color={brandColor} />
-              }
-            />
-          }
-          name="Total Projects"
-          value="2935"
-        />
-      </SimpleGrid>
 
-      <SimpleGrid
-        columns={{ base: 1, md: 2, xl: 2 }}
-        gap="20px"
-        mb="20px"
-      ></SimpleGrid>
-      <SimpleGrid columns={{ base: 1, md: 1, xl: 2 }} gap="20px" mb="20px">
-        <CheckTable columnsData={columnsDataCheck} tableData={tableDataCheck} />
-        <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px">
-          <DailyTraffic />
-          <PieCard />
-        </SimpleGrid>
-      </SimpleGrid>
-      <SimpleGrid columns={{ base: 1, md: 1, xl: 2 }} gap="20px" mb="20px">
-        <ComplexTable
-          columnsData={columnsDataComplex}
-          tableData={tableDataComplex}
-        />
-        <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px">
-          <Tasks tweets={tweets.slice(0, 5)} />
-          <MiniCalendar h="100%" minW="100%" selectRange={false} />
-        </SimpleGrid>
-      </SimpleGrid>
-    </Box>
+            <MiniStatistics
+              startContent={
+                <IconBox
+                  w="56px"
+                  h="56px"
+                  bg={boxBg}
+                  icon={
+                    <Icon
+                      w="32px"
+                      h="32px"
+                      as={MdFileCopy}
+                      color={brandColor}
+                    />
+                  }
+                />
+              }
+              name="Total Web Channels"
+              value={data.website ? data?.website.length : []}
+            />
+          </SimpleGrid>
+
+          <SimpleGrid
+            columns={{ base: 1, md: 2, xl: 2 }}
+            gap="20px"
+            mb="20px"
+          ></SimpleGrid>
+          <SimpleGrid columns={{ base: 1, md: 1, xl: 2 }} gap="20px" mb="20px">
+            <ComplexTable
+              tableData={data?.channel ? data?.channel : []}
+              columnsData={columnsDataComplex}
+              type="news"
+            />
+            <SimpleGrid columns={{ base: 1, md: 2, xl: 1 }} gap="20px">
+              <PieCard />
+            </SimpleGrid>
+          </SimpleGrid>
+          <SimpleGrid columns={{ base: 1, md: 1, xl: 2 }} gap="20px" mb="20px">
+            <ComplexTable
+              tableData={data?.website ? data?.website : []}
+              columnsData={columnsDataComplex}
+              type="web"
+            />
+            <Tasks tweets={tweets.slice(0, 9)} />
+          </SimpleGrid>
+        </Box>
+      ) : (
+        <div style={{ margin: 30 }}>
+          <Progress style={{ width: 700 }} isIndeterminate />
+        </div>
+      )}
+    </>
   );
 }

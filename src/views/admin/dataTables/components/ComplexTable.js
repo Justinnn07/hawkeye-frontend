@@ -41,7 +41,7 @@ import { useState } from "react";
 
 // Assets
 export default function ColumnsTable(props) {
-  const { columnsData, tableData, pathname, loading } = props;
+  const { columnsData, tableData, pathname } = props;
 
   const columns = useMemo(() => columnsData, [columnsData]);
   const data = useMemo(() => tableData, [tableData]);
@@ -80,7 +80,7 @@ export default function ColumnsTable(props) {
   const borderColor = useColorModeValue("gray.200", "whiteAlpha.100");
   return (
     <>
-      {loading ? (
+      {data?.length === 0 ? (
         <div>
           <Progress style={{ width: 700 }} isIndeterminate />
         </div>
@@ -110,7 +110,7 @@ export default function ColumnsTable(props) {
           </Flex>
 
           <Table
-            {...getTableProps()}
+            // {...getTableProps()}
             variant="simple"
             color="gray.500"
             mb="500px"
@@ -130,271 +130,98 @@ export default function ColumnsTable(props) {
             </Thead>
 
             <Tbody {...getTableBodyProps()}>
-              {page
-                .filter((res) => {
-                  return (
-                    res.original.Name.toLowerCase().includes(
-                      search.toLowerCase()
-                    ) ||
-                    res.original.Address.toLowerCase().includes(
-                      search.toLowerCase()
-                    ) ||
-                    res.original.Email.toLowerCase().includes(
-                      search.toLowerCase()
-                    ) ||
-                    res.original.Location.toLowerCase().includes(
-                      search.toLowerCase()
-                    )
-                  );
-                })
-                .map((row, index) => {
-                  console.log(row);
+              {page.length > 0 &&
+                page
+                  ?.filter((res) => {
+                    return (
+                      res.original.Name.toLowerCase().includes(
+                        search.toLowerCase()
+                      ) ||
+                      res.original.Address.toLowerCase().includes(
+                        search.toLowerCase()
+                      ) ||
+                      res.original.Email.toLowerCase().includes(
+                        search.toLowerCase()
+                      ) ||
+                      res.original.Location.toLowerCase().includes(
+                        search.toLowerCase()
+                      )
+                    );
+                  })
+                  .map((row, index) => {
+                    console.log(row);
 
-                  return (
-                    <Tr
-                      key={index}
-                      sx={{
-                        "& > *": {
-                          color: "white",
-                          fontWeight: "bold",
-                        },
-                      }}
-                    >
-                      <Td>{row.original.Name}</Td>
-                      <Td>{row.original.Address}</Td>
-                      <Td>{row.original.Phone}</Td>
-                      <Td>{row.original.Email}</Td>
-                      <Td>{row.original.Location}</Td>
-                      <Td>
-                        <Flex
-                          align="center"
-                          sx={{
-                            "& > *": {
-                              margin: 5,
-                            },
-                          }}
-                        >
-                          <Text
-                            color={textColor}
-                            fontSize="sm"
-                            fontWeight="700"
+                    return (
+                      <Tr
+                        key={index}
+                        sx={{
+                          "& > *": {
+                            color: "white",
+                            fontWeight: "bold",
+                          },
+                        }}
+                      >
+                        <Td>{row.original.Name}</Td>
+                        <Td>{row.original.Address}</Td>
+                        <Td>{row.original.Phone}</Td>
+                        <Td>{row.original.Email}</Td>
+                        <Td>{row.original.Location}</Td>
+                        <Td>
+                          <Flex
+                            align="center"
+                            sx={{
+                              "& > *": {
+                                margin: 5,
+                              },
+                            }}
                           >
-                            {row.original.Facebook !== "NA" ? (
-                              <a
-                                href={`${row.original.Facebook}`}
-                                target="_blank"
-                              >
-                                <i class="fa fa-facebook-square"></i>
-                              </a>
-                            ) : null}
-                            &nbsp;
-                            {row.original.Instagram !== "NA" ? (
-                              <a
-                                target="_blank"
-                                href={`${row.original.Instagram}`}
-                              >
-                                <i class="fa fa-instagram"></i>
-                              </a>
-                            ) : null}
-                            {row.original.Twitter !== "NA" ? (
-                              <a
-                                target="_blank"
-                                href={`${row.original.Twitter}`}
-                              >
-                                <i class="fa fa-twitter"></i>
-                              </a>
-                            ) : null}
-                            {row.original.Youtube !== "NA" ? (
-                              <a
-                                href={`${row.original.Youtube}`}
-                                target="_blank"
-                              >
-                                <i class="fa fa-youtube-play"></i>
-                              </a>
-                            ) : null}
-                          </Text>
-                        </Flex>
-                      </Td>
-                      <Td>{row.original.Location}</Td>
-                      <Td>{row.original.Views}</Td>
-                      <Td>{row.original.ip}</Td>
-                      {/* {row.original.cells.map((cell, index) => {
-                        let data = "";
-                        if (cell.column.Header === "NAME") {
-                          data = (
-                            <a
-                              href={
-                                row.original.original.Link !== "NA"
-                                  ? row.original.Link
-                                  : null
-                              }
-                              target="_blank"
+                            <Text
+                              color={textColor}
+                              fontSize="sm"
+                              fontWeight="700"
                             >
-                              <Text
-                                color={textColor}
-                                fontSize="sm"
-                                fontWeight="700"
-                              >
-                                {cell.value}
-                              </Text>
-                            </a>
-                          );
-                        } else if (cell.column.Header === "ADDRESS") {
-                          data = (
-                            <Flex align="center">
-                              <Text
-                                color={textColor}
-                                fontSize="sm"
-                                fontWeight="700"
-                              >
-                                {cell.value}
-                              </Text>
-                            </Flex>
-                          );
-                        } else if (cell.column.Header === "PHONE") {
-                          data = (
-                            <Flex align="center">
-                              <Text
-                                color={textColor}
-                                fontSize="sm"
-                                fontWeight="700"
-                              >
-                                {cell.value}
-                              </Text>
-                            </Flex>
-                          );
-                        } else if (cell.column.Header === "EMAIL") {
-                          data = (
-                            <Flex align="center">
-                              <Text
-                                color={textColor}
-                                fontSize="sm"
-                                fontWeight="700"
-                              >
-                                {cell.value}
-                              </Text>
-                            </Flex>
-                          );
-                        } else if (cell.column.Header === "LOCATION") {
-                          data = (
-                            <Flex align="center">
-                              <Text
-                                color={textColor}
-                                fontSize="sm"
-                                fontWeight="700"
-                              >
-                                {cell.value}
-                              </Text>
-                            </Flex>
-                          );
-                        } else if (cell.column.Header === "SOCIAL") {
-                          data = (
-                            <Flex
-                              align="center"
-                              sx={{
-                                "& > *": {
-                                  margin: 5,
-                                },
-                              }}
-                            >
-                              <Text
-                                color={textColor}
-                                fontSize="sm"
-                                fontWeight="700"
-                              >
-                                {cell.value}
-                                {row.Facebook !==
-                                "NA" ? (
-                                  <a
-                                    href={`${row.cells[5]?.row?.original?.Facebook}`}
-                                    target="_blank"
-                                  >
-                                    <i class="fa fa-facebook-square"></i>
-                                  </a>
-                                ) : null}
-                                &nbsp;
-                                {row.cells[5]?.row?.original?.Instagram !==
-                                "NA" ? (
-                                  <a
-                                    target="_blank"
-                                    href={`${row.cells[5]?.row?.original?.Instagram}`}
-                                  >
-                                    <i class="fa fa-instagram"></i>
-                                  </a>
-                                ) : null}
-                                {row.cells[5]?.row?.original?.Twitter !==
-                                "NA" ? (
-                                  <a
-                                    target="_blank"
-                                    href={`${row.cells[5]?.row?.original?.Twitter}`}
-                                  >
-                                    <i class="fa fa-twitter"></i>
-                                  </a>
-                                ) : null}
-                                {row.cells[5]?.row?.original?.Youtube !==
-                                "NA" ? (
-                                  <a
-                                    href={`${row.cells[5]?.row?.original?.Youtube}`}
-                                    target="_blank"
-                                  >
-                                    <i class="fa fa-youtube-play"></i>
-                                  </a>
-                                ) : null}
-                              </Text>
-                            </Flex>
-                          );
-                        } else if (cell.column.Header === "VIEWS") {
-                          data = (
-                            <Flex align="center">
-                              <Text
-                                color={textColor}
-                                fontSize="sm"
-                                fontWeight="700"
-                              >
-                                {cell.value}
-                              </Text>
-                            </Flex>
-                          );
-                        } else if (cell.column.Header === "LANGUAGE") {
-                          data = (
-                            <Flex align="center">
-                              <Text
-                                color={textColor}
-                                fontSize="sm"
-                                fontWeight="700"
-                              >
-                                {cell.value}
-                              </Text>
-                            </Flex>
-                          );
-                        } else if (cell.column.Header === "IP") {
-                          data = (
-                            <Flex align="center">
-                              <Text
-                                color={textColor}
-                                fontSize="sm"
-                                fontWeight="700"
-                              >
-                                {cell.value}
-                              </Text>
-                            </Flex>
-                          );
-                        }
-                        return (
-                          <Td
-                            {...cell.getCellProps()}
-                            key={index}
-                            fontSize={{ sm: "14px" }}
-                            minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                            borderColor="transparent"
-                          >
-                            {data}
-                          </Td>
-                        );
-                      })} */}
-                    </Tr>
-                  );
-                })}
+                              {row.original.Facebook !== "NA" ? (
+                                <a
+                                  href={`${row.original.Facebook}`}
+                                  target="_blank"
+                                >
+                                  <i class="fa fa-facebook-square"></i>
+                                </a>
+                              ) : null}
+                              &nbsp;
+                              {row.original.Instagram !== "NA" ? (
+                                <a
+                                  target="_blank"
+                                  href={`${row.original.Instagram}`}
+                                >
+                                  <i class="fa fa-instagram"></i>
+                                </a>
+                              ) : null}
+                              {row.original.Twitter !== "NA" ? (
+                                <a
+                                  target="_blank"
+                                  href={`${row.original.Twitter}`}
+                                >
+                                  <i class="fa fa-twitter"></i>
+                                </a>
+                              ) : null}
+                              {row.original.Youtube !== "NA" ? (
+                                <a
+                                  href={`${row.original.Youtube}`}
+                                  target="_blank"
+                                >
+                                  <i class="fa fa-youtube-play"></i>
+                                </a>
+                              ) : null}
+                            </Text>
+                          </Flex>
+                        </Td>
+                        <Td>{row.original.Location}</Td>
+                        <Td>{row.original.Views}</Td>
+                        <Td>{row.original.ip}</Td>
+                      </Tr>
+                    );
+                  })}
             </Tbody>
           </Table>
 
