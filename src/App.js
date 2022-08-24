@@ -1,23 +1,49 @@
 import "./App.css";
 import theme from "./theme/theme";
-import { Switch, Route, Link, useLocation } from "react-router-dom";
-import { Box, ChakraProvider, Flex } from "@chakra-ui/react";
+import { Switch, Route, useLocation } from "react-router-dom";
+import { Box, ChakraProvider } from "@chakra-ui/react";
 import routes from "./routes";
 import Sidebar from "components/sidebar/Sidebar";
 import AdminNavbar from "components/navbar/NavbarAdmin";
 import { useEffect, useState } from "react";
+import states from "./indianStates.json";
 function App() {
   const [data, setData] = useState({});
+  const [tweets, setTweets] = useState([]);
   const { pathname } = useLocation();
 
   useEffect(() => {
-    fetch("https://hawkeye-1.herokuapp.com/data")
+    fetch("https://kiran-server-hawkey.vercel.app/data")
       .then((res) => res.json())
       .then((res) => {
         setData(res);
       });
   }, []);
-  console.log(data);
+  useEffect(() => {
+    fetch("https://kiran-server-hawkey.vercel.app/twitter/data")
+      .then((res) => res.json())
+      .then((data) => {
+        setTweets(data);
+      });
+  }, [data?.channel]);
+
+  const statesWithLocation = states.map((res) => ({
+    state: res.state,
+    lat: parseFloat(res.lat),
+    long: parseFloat(res.lon),
+  }));
+
+  const mainData = data?.channel?.forEach((item, index) => {
+    if (
+      statesWithLocation[index].state
+        .toLowerCase()
+        .includes(item.Location.toLowerCase())
+    ) {
+      return item;
+    }
+  });
+
+  console.log(mainData);
   return (
     <ChakraProvider theme={theme}>
       <Switch>
@@ -43,7 +69,7 @@ function App() {
                 transitionTimingFunction="linear, linear, ease"
               >
                 <AdminNavbar brandText={name} />
-                <Component data={data} pathname={pathname} />
+                <Component data={data} pathname={pathname} tweets={tweets} />
               </Box>
             </Box>
           </Route>

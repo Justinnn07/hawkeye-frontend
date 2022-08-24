@@ -78,6 +78,8 @@ export default function ColumnsTable(props) {
 
   const textColor = useColorModeValue("secondaryGray.900", "white");
   const borderColor = useColorModeValue("gray.200", "whiteAlpha.100");
+
+  console.log(pathname);
   return (
     <>
       {data?.length === 0 ? (
@@ -145,27 +147,36 @@ export default function ColumnsTable(props) {
                       ) ||
                       res.original.Location.toLowerCase().includes(
                         search.toLowerCase()
-                      )
+                      ) ||
+                      res.original.ip
+                        .toLowerCase()
+                        .includes(search.toLowerCase())
                     );
                   })
                   .map((row, index) => {
-                    console.log(row);
-
                     return (
-                      <Tr
-                        key={index}
-                        sx={{
-                          "& > *": {
-                            color: "white",
-                            fontWeight: "bold",
-                          },
-                        }}
-                      >
-                        <Td>{row.original.Name}</Td>
-                        <Td>{row.original.Address}</Td>
-                        <Td>{row.original.Phone}</Td>
-                        <Td>{row.original.Email}</Td>
-                        <Td>{row.original.Location}</Td>
+                      <Tr key={index}>
+                        <Td color={textColor} fontSize="sm" fontWeight="700">
+                          <a
+                            href={`https://${row.original.Link}`}
+                            target="_blank"
+                          >
+                            {row.original.Name}
+                          </a>
+                        </Td>
+                        <Td color={textColor} fontSize="sm" fontWeight="700">
+                          {row.original.Address}
+                        </Td>
+                        <Td color={textColor} fontSize="sm" fontWeight="700">
+                          {row.original.Phone}
+                        </Td>
+                        <Td color={textColor} fontSize="sm" fontWeight="700">
+                          {row.original.Email}
+                        </Td>
+                        <Td color={textColor} fontSize="sm" fontWeight="700">
+                          {" "}
+                          {row.original.Location}
+                        </Td>
                         <Td>
                           <Flex
                             align="center"
@@ -216,9 +227,15 @@ export default function ColumnsTable(props) {
                             </Text>
                           </Flex>
                         </Td>
-                        <Td>{row.original.Location}</Td>
-                        <Td>{row.original.Views}</Td>
-                        <Td>{row.original.ip}</Td>
+                        <Td color={textColor} fontSize="sm" fontWeight="700">
+                          {row.original.Location}
+                        </Td>
+                        <Td color={textColor} fontSize="sm" fontWeight="700">
+                          {row.original.Views}
+                        </Td>
+                        <Td color={textColor} fontSize="sm" fontWeight="700">
+                          {row.original.ip}
+                        </Td>
                       </Tr>
                     );
                   })}
@@ -260,25 +277,7 @@ export default function ColumnsTable(props) {
                   {pageOptions.length}
                 </Text>
               </Text>
-              <Text flexShrink="0">Go to page:</Text>{" "}
-              <NumberInput
-                ml={1}
-                mr={8}
-                w={28}
-                min={1}
-                max={pageOptions.length}
-                onChange={(value) => {
-                  const page = value ? value - 1 : 0;
-                  gotoPage(page);
-                }}
-                defaultValue={pageIndex}
-              >
-                <NumberInputField />
-                <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
-                </NumberInputStepper>
-              </NumberInput>
+              <Text flexShrink="0">Go to page:</Text>
               <Select
                 w={32}
                 value={pageSize}
@@ -286,7 +285,7 @@ export default function ColumnsTable(props) {
                   setPageSize(Number(e.target.value));
                 }}
               >
-                {[5, 10, 20, 30, 40].map((pageSize) => (
+                {[5, 10, 15, 20, 25].map((pageSize) => (
                   <option key={pageSize} value={pageSize}>
                     Show {pageSize}
                   </option>

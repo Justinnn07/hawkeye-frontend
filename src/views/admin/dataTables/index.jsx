@@ -6,11 +6,12 @@ import { columnsDataComplex } from "views/admin/dataTables/variables/columnsData
 
 import tableDataComplex from "views/admin/dataTables/variables/tableDataComplex.json";
 import React from "react";
-import { useEffect } from "react";
-import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 
 export default function Settings({ data, pathname }) {
+  if (!data.channel) {
+    return <Redirect to="/" />;
+  }
   // Chakra Color Mode
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
@@ -21,6 +22,7 @@ export default function Settings({ data, pathname }) {
       >
         <ComplexTable
           columnsData={columnsDataComplex}
+          pathname={pathname}
           tableData={
             pathname === "/web-channels" ? data?.website : data?.channel
           }
