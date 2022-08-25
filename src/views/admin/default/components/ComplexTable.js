@@ -87,7 +87,7 @@ export default function ColumnsTable(props) {
           {data?.slice(0, 6).map((row, index) => (
             <Tr key={index}>
               <Td color={textColor} fontSize="sm" fontWeight="700">
-                <a href={row.Link} target="_blank">
+                <a href={`https://${row.Link}`} target="_blank">
                   {row.Name}
                 </a>
               </Td>
