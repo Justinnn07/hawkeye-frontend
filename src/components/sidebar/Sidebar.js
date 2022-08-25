@@ -67,7 +67,7 @@ function Sidebar(props) {
 
 // FUNCTIONS
 export function SidebarResponsive(props) {
-  let sidebarBackgroundColor = useColorModeValue("white", "navy.800");
+  let sidebarBackgroundColor = useColorModeValue("#2199DF", "navy.800");
   let menuColor = useColorModeValue("gray.400", "white");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = React.useRef();
@@ -75,7 +75,11 @@ export function SidebarResponsive(props) {
   const { routes } = props;
 
   return (
-    <Flex display={{ sm: "flex", xl: "none" }} alignItems="center">
+    <Flex
+      display={{ sm: "flex", xl: "none" }}
+      sx={{ height: "100vh" }}
+      alignItems="center"
+    >
       <Flex ref={btnRef} w="max-content" h="max-content" onClick={onOpen}>
         <Icon
           as={IoMenuOutline}
