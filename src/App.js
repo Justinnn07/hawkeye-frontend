@@ -6,7 +6,6 @@ import routes from "./routes";
 import Sidebar from "components/sidebar/Sidebar";
 import AdminNavbar from "components/navbar/NavbarAdmin";
 import { useEffect, useState } from "react";
-import states from "./indianStates.json";
 function App() {
   const [data, setData] = useState({});
   const [tweets, setTweets] = useState([]);
@@ -23,27 +22,11 @@ function App() {
     fetch("https://kiran-server-hawkey.vercel.app/twitter/data")
       .then((res) => res.json())
       .then((data) => {
+        console.log(data);
         setTweets(data);
       });
-  }, [data?.channel]);
+  }, []);
 
-  const statesWithLocation = states.map((res) => ({
-    state: res.state,
-    lat: parseFloat(res.lat),
-    long: parseFloat(res.lon),
-  }));
-
-  const mainData = data?.channel?.forEach((item, index) => {
-    if (
-      statesWithLocation[index].state
-        .toLowerCase()
-        .includes(item.Location.toLowerCase())
-    ) {
-      return item;
-    }
-  });
-
-  console.log(mainData);
   return (
     <ChakraProvider theme={theme}>
       <Switch>

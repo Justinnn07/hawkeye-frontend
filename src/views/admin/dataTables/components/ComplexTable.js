@@ -42,16 +42,18 @@ import { useState } from "react";
 // Assets
 export default function ColumnsTable(props) {
   const { columnsData, tableData, pathname } = props;
+  const unique = [...new Map(tableData.map((m) => [m.Location, m])).values()];
 
   const columns = useMemo(() => columnsData, [columnsData]);
   const data = useMemo(() => tableData, [tableData]);
   const [search, setSearch] = useState("");
+  const [filterByState, setFilterByState] = useState("all");
 
   const tableInstance = useTable(
     {
       columns,
       data,
-      initialState: { pageIndex: 1 },
+      initialState: { pageIndex: 0 },
     },
     useGlobalFilter,
     useSortBy,
@@ -79,7 +81,6 @@ export default function ColumnsTable(props) {
   const textColor = useColorModeValue("secondaryGray.900", "white");
   const borderColor = useColorModeValue("gray.200", "whiteAlpha.100");
 
-  console.log(pathname);
   return (
     <>
       {data?.length === 0 ? (
@@ -97,18 +98,44 @@ export default function ColumnsTable(props) {
             >
               {pathname === "/news-channels" ? "News Channels" : "Web Channels"}
             </Text>
-            <Input
-              placeholder="Search..."
-              width="auto"
-              borderColor={textColor}
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
+            <Flex
               sx={{
-                "&::placeholder": {
-                  color: "white",
+                "& > *": {
+                  margin: 2,
                 },
               }}
-            />
+            >
+              <Input
+                placeholder="Search..."
+                width="auto"
+                borderColor={textColor}
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                sx={{
+                  "&::placeholder": {
+                    color: "white",
+                  },
+                }}
+              />
+              <Select
+                w={32}
+                value={filterByState}
+                onChange={(e) => {
+                  setFilterByState(e.target.value);
+                }}
+              >
+                <option value="all">All</option>
+                {unique.map(({ Location }, index) => (
+                  <>
+                    {Location === "NA" ? null : (
+                      <option key={index} value={Location}>
+                        {Location}
+                      </option>
+                    )}
+                  </>
+                ))}
+              </Select>
+            </Flex>
           </Flex>
 
           <Table
@@ -153,6 +180,11 @@ export default function ColumnsTable(props) {
                         .includes(search.toLowerCase())
                     );
                   })
+                  .filter((res) =>
+                    filterByState === "all"
+                      ? res
+                      : res.original.Location === filterByState
+                  )
                   .map((row, index) => {
                     return (
                       <Tr key={index}>
@@ -270,7 +302,7 @@ export default function ColumnsTable(props) {
               <Text flexShrink="0" mr={8}>
                 Page{" "}
                 <Text fontWeight="bold" as="span">
-                  {pageIndex}
+                  {pageIndex + 1}
                 </Text>{" "}
                 of{" "}
                 <Text fontWeight="bold" as="span">
