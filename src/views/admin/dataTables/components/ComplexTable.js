@@ -38,6 +38,7 @@ import Card from "components/card/Card";
 import Menu from "components/menu/MainMenu";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { BsFacebook, BsInstagram, BsTwitter, BsYoutube } from "react-icons/bs";
 
 // Assets
 export default function ColumnsTable(props) {
@@ -127,7 +128,7 @@ export default function ColumnsTable(props) {
                 <option value="all">All</option>
                 {unique.map(({ Location }, index) => (
                   <>
-                    {Location === "NA" ? null : (
+                    {Location === null ? null : (
                       <option key={index} value={Location}>
                         {Location}
                       </option>
@@ -206,58 +207,49 @@ export default function ColumnsTable(props) {
                           {row.original.Email}
                         </Td>
                         <Td color={textColor} fontSize="sm" fontWeight="700">
-                          {" "}
                           {row.original.Location}
                         </Td>
                         <Td>
-                          <Flex
-                            align="center"
-                            sx={{
-                              "& > *": {
-                                margin: 5,
-                              },
-                            }}
+                          <Text
+                            color={textColor}
+                            fontSize="sm"
+                            fontWeight="700"
                           >
-                            <Text
-                              color={textColor}
-                              fontSize="sm"
-                              fontWeight="700"
-                            >
-                              {row.original.Facebook !== "NA" ? (
+                            <Flex justifyContent="space-between">
+                              {row.original.Facebook !== null ? (
                                 <a
                                   href={`${row.original.Facebook}`}
                                   target="_blank"
                                 >
-                                  <i class="fa fa-facebook-square"></i>
+                                  <BsFacebook fontSize={20} />
                                 </a>
                               ) : null}
-                              &nbsp;
-                              {row.original.Instagram !== "NA" ? (
+                              {row.original.Instagram !== null ? (
                                 <a
                                   target="_blank"
                                   href={`${row.original.Instagram}`}
                                 >
-                                  <i class="fa fa-instagram"></i>
+                                  <BsInstagram fontSize={20} />
                                 </a>
                               ) : null}
-                              {row.original.Twitter !== "NA" ? (
+                              {row.original.Twitter !== null ? (
                                 <a
                                   target="_blank"
                                   href={`${row.original.Twitter}`}
                                 >
-                                  <i class="fa fa-twitter"></i>
+                                  <BsTwitter fontSize={20} />
                                 </a>
                               ) : null}
-                              {row.original.Youtube !== "NA" ? (
+                              {row.original.Youtube !== null ? (
                                 <a
                                   href={`${row.original.Youtube}`}
                                   target="_blank"
                                 >
-                                  <i class="fa fa-youtube-play"></i>
+                                  <BsYoutube fontSize={20} />
                                 </a>
                               ) : null}
-                            </Text>
-                          </Flex>
+                            </Flex>
+                          </Text>
                         </Td>
                         <Td color={textColor} fontSize="sm" fontWeight="700">
                           {row.original.Location}
