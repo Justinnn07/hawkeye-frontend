@@ -213,7 +213,9 @@ export default function ColumnsTable(props) {
                     );
                   })
                   .filter((res) =>
-                    filterByState === "all" ? res : res.original.Location
+                    filterByState === "all"
+                      ? res
+                      : res.original.Location === filterByState
                   )
                   .map((row, index) => {
                     console.log(row.original);
