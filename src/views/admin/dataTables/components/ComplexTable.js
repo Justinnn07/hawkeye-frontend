@@ -39,10 +39,11 @@ import Menu from "components/menu/MainMenu";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { BsFacebook, BsInstagram, BsTwitter, BsYoutube } from "react-icons/bs";
+import moment from "moment";
 
 // Assets
 export default function ColumnsTable(props) {
-  const { columnsData, tableData, pathname } = props;
+  const { columnsData, tableData, pathname, show, setShow } = props;
   const unique = [...new Map(tableData.map((m) => [m.Location, m])).values()];
 
   const columns = useMemo(() => columnsData, [columnsData]);
@@ -50,6 +51,9 @@ export default function ColumnsTable(props) {
   const [search, setSearch] = useState("");
   const [filterByState, setFilterByState] = useState("all");
 
+  const options = ["Web Channels", "News Channels"];
+
+  console.log(options);
   const tableInstance = useTable(
     {
       columns,
@@ -91,14 +95,31 @@ export default function ColumnsTable(props) {
       ) : (
         <Card w="200%">
           <Flex px="25px" justify="space-between" mb="20px" align="center">
-            <Text
-              color={textColor}
-              fontSize="22px"
-              fontWeight="700"
-              lineHeight="100%"
-            >
-              {pathname === "/news-channels" ? "News Channels" : "Web Channels"}
-            </Text>
+            {pathname === "/logs" ? (
+              <Select
+                width={200}
+                value={show}
+                onChange={(e) => setShow(e.target.value)}
+              >
+                {options.map((res, index) => (
+                  <option key={index} value={res}>
+                    {res}
+                  </option>
+                ))}
+              </Select>
+            ) : (
+              <Text
+                color={textColor}
+                fontSize="22px"
+                fontWeight="700"
+                lineHeight="100%"
+              >
+                {pathname === "/news-channels"
+                  ? "News Channels"
+                  : "Web Channels"}
+              </Text>
+            )}
+
             <Flex
               sx={{
                 "& > *": {
@@ -146,17 +167,27 @@ export default function ColumnsTable(props) {
             mb="500px"
           >
             <Thead>
-              <Tr>
-                <Th>Name</Th>
-                <Th>Address</Th>
-                <Th>Phone</Th>
-                <Th>Email</Th>
-                <Th>Language</Th>
-                <Th>Social</Th>
-                <Th>State</Th>
-                <Th>Views</Th>
-                <Th>IP</Th>
-              </Tr>
+              {pathname === "/web-channels" || pathname === "/news-channels" ? (
+                <Tr>
+                  <Th>Name</Th>
+                  <Th>Address</Th>
+                  <Th>Phone</Th>
+                  <Th>Email</Th>
+                  <Th>Language</Th>
+                  <Th>Social</Th>
+                  <Th>State</Th>
+                  <Th>Views</Th>
+                  <Th>IP</Th>
+                </Tr>
+              ) : (
+                <Tr>
+                  <Th>Name</Th>
+                  <Th>Language</Th>
+                  <Th>State</Th>
+                  <Th>Views</Th>
+                  <Th>Day Registered</Th>
+                </Tr>
+              )}
             </Thead>
 
             <Tbody {...getTableBodyProps()}>
@@ -182,85 +213,174 @@ export default function ColumnsTable(props) {
                     );
                   })
                   .filter((res) =>
-                    filterByState === "all"
-                      ? res
-                      : res.original.Location === filterByState
+                    filterByState === "all" ? res : res.original.Location
                   )
                   .map((row, index) => {
+                    console.log(row.original);
                     return (
-                      <Tr key={index}>
-                        <Td color={textColor} fontSize="sm" fontWeight="700">
-                          <a
-                            href={`https://${row.original.Link}`}
-                            target="_blank"
-                          >
-                            {row.original.Name}
-                          </a>
-                        </Td>
-                        <Td color={textColor} fontSize="sm" fontWeight="700">
-                          {row.original.Address}
-                        </Td>
-                        <Td color={textColor} fontSize="sm" fontWeight="700">
-                          {row.original.Phone}
-                        </Td>
-                        <Td color={textColor} fontSize="sm" fontWeight="700">
-                          {row.original.Email}
-                        </Td>
-                        <Td color={textColor} fontSize="sm" fontWeight="700">
-                          {row.original.Location}
-                        </Td>
-                        <Td>
-                          <Text
-                            color={textColor}
-                            fontSize="sm"
-                            fontWeight="700"
-                          >
-                            <Flex justifyContent="space-between">
-                              {row.original.Facebook !== null ? (
-                                <a
-                                  href={`${row.original.Facebook}`}
-                                  target="_blank"
-                                >
-                                  <BsFacebook fontSize={20} />
-                                </a>
-                              ) : null}
-                              {row.original.Instagram !== null ? (
-                                <a
-                                  target="_blank"
-                                  href={`${row.original.Instagram}`}
-                                >
-                                  <BsInstagram fontSize={20} />
-                                </a>
-                              ) : null}
-                              {row.original.Twitter !== null ? (
-                                <a
-                                  target="_blank"
-                                  href={`${row.original.Twitter}`}
-                                >
-                                  <BsTwitter fontSize={20} />
-                                </a>
-                              ) : null}
-                              {row.original.Youtube !== null ? (
-                                <a
-                                  href={`${row.original.Youtube}`}
-                                  target="_blank"
-                                >
-                                  <BsYoutube fontSize={20} />
-                                </a>
-                              ) : null}
-                            </Flex>
-                          </Text>
-                        </Td>
-                        <Td color={textColor} fontSize="sm" fontWeight="700">
-                          {row.original.Location}
-                        </Td>
-                        <Td color={textColor} fontSize="sm" fontWeight="700">
-                          {row.original.Views}
-                        </Td>
-                        <Td color={textColor} fontSize="sm" fontWeight="700">
-                          {row.original.ip}
-                        </Td>
-                      </Tr>
+                      <>
+                        {pathname === "/logs" ? (
+                          <Tr>
+                            <Td
+                              color={textColor}
+                              fontSize="sm"
+                              fontWeight="700"
+                            >
+                              <a
+                                href={`http://${row.original.Link}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                {row.original.Name}
+                              </a>
+                            </Td>
+                            <Td>
+                              <Text
+                                color={textColor}
+                                fontSize="sm"
+                                fontWeight="700"
+                              >
+                                {row.original.Language}
+                              </Text>
+                            </Td>
+                            <Td>
+                              <Text
+                                color={textColor}
+                                fontSize="sm"
+                                fontWeight="700"
+                              >
+                                {row.original.Location}
+                              </Text>
+                            </Td>
+                            <Td>
+                              <Text
+                                color={textColor}
+                                fontSize="sm"
+                                fontWeight="700"
+                              >
+                                {row.original.Views}
+                              </Text>
+                            </Td>
+                            <Td>
+                              <Text
+                                color={textColor}
+                                fontSize="sm"
+                                fontWeight="700"
+                              >
+                                {moment(row.original.timestamp).format(
+                                  "MMMM Do YYYY, dddd, h:mm:ss a"
+                                )}
+                              </Text>
+                            </Td>
+                          </Tr>
+                        ) : (
+                          <Tr key={index}>
+                            <Td
+                              color={textColor}
+                              fontSize="sm"
+                              fontWeight="700"
+                            >
+                              <a
+                                href={`https://${row.original.Link}`}
+                                target="_blank"
+                              >
+                                {row.original.Name}
+                              </a>
+                            </Td>
+                            <Td
+                              color={textColor}
+                              fontSize="sm"
+                              fontWeight="700"
+                            >
+                              {row.original.Address}
+                            </Td>
+                            <Td
+                              color={textColor}
+                              fontSize="sm"
+                              fontWeight="700"
+                            >
+                              {row.original.Phone}
+                            </Td>
+                            <Td
+                              color={textColor}
+                              fontSize="sm"
+                              fontWeight="700"
+                            >
+                              {row.original.Email}
+                            </Td>
+                            <Td
+                              color={textColor}
+                              fontSize="sm"
+                              fontWeight="700"
+                            >
+                              {row.original.Location}
+                            </Td>
+                            <Td>
+                              <Text
+                                color={textColor}
+                                fontSize="sm"
+                                fontWeight="700"
+                              >
+                                <Flex justifyContent="space-between">
+                                  {row.original.Facebook !== null ? (
+                                    <a
+                                      href={`${row.original.Facebook}`}
+                                      target="_blank"
+                                    >
+                                      <BsFacebook fontSize={20} />
+                                    </a>
+                                  ) : null}
+                                  {row.original.Instagram !== null ? (
+                                    <a
+                                      target="_blank"
+                                      href={`${row.original.Instagram}`}
+                                    >
+                                      <BsInstagram fontSize={20} />
+                                    </a>
+                                  ) : null}
+                                  {row.original.Twitter !== null ? (
+                                    <a
+                                      target="_blank"
+                                      href={`${row.original.Twitter}`}
+                                    >
+                                      <BsTwitter fontSize={20} />
+                                    </a>
+                                  ) : null}
+                                  {row.original.Youtube !== null ? (
+                                    <a
+                                      href={`${row.original.Youtube}`}
+                                      target="_blank"
+                                    >
+                                      <BsYoutube fontSize={20} />
+                                    </a>
+                                  ) : null}
+                                </Flex>
+                              </Text>
+                            </Td>
+                            <Td
+                              color={textColor}
+                              fontSize="sm"
+                              fontWeight="700"
+                            >
+                              {row.original.Location}
+                            </Td>
+                            <Td
+                              color={textColor}
+                              fontSize="sm"
+                              fontWeight="700"
+                            >
+                              {row.original.Views}
+                            </Td>
+                            <Td
+                              color={textColor}
+                              fontSize="sm"
+                              fontWeight="700"
+                            >
+                              {row.original.ip}
+                            </Td>
+                          </Tr>
+                        )}
+                      </>
                     );
                   })}
             </Tbody>

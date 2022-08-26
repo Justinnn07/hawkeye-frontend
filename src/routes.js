@@ -11,6 +11,7 @@ import NFTMarketplace from "./views/admin/marketplace";
 import Profile from "./views/admin/profile";
 import DataTables from "./views/admin/dataTables";
 import { FaNewspaper } from "react-icons/fa";
+import { FiSettings } from "react-icons/fi";
 
 const routes = [
   {
@@ -42,6 +43,13 @@ const routes = [
     icon: <Icon as={FaNewspaper} width="20px" height="20px" color="inherit" />,
     path: "/news",
     Component: NFTMarketplace,
+  },
+  {
+    name: "Logs",
+    layout: "/",
+    icon: <Icon as={FiSettings} width="20px" height="20px" color="inherit" />,
+    path: "/logs",
+    Component: DataTables,
   },
 ];
 
