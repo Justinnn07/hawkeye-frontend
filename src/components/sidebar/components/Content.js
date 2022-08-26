@@ -9,7 +9,7 @@ import React from "react";
 
 function SidebarContent(props) {
   const { routes } = props;
-  let sidebarBackgroundColor = useColorModeValue("#1c83e0", "navy.800");
+  let sidebarBackgroundColor = useColorModeValue("white", "navy.800");
 
   // SIDEBAR
   return (

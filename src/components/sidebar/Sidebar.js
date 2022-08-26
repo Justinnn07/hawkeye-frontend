@@ -67,7 +67,7 @@ function Sidebar(props) {
 
 // FUNCTIONS
 export function SidebarResponsive(props) {
-  let sidebarBackgroundColor = useColorModeValue("#2199DF", "navy.800");
+  let sidebarBackgroundColor = useColorModeValue("white", "navy.800");
   let menuColor = useColorModeValue("gray.400", "white");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = React.useRef();

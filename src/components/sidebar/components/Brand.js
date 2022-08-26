@@ -16,7 +16,7 @@ export function SidebarBrand() {
       <img
         src="https://i.imgur.com/L5jBjys.png"
         alt=""
-        style={{ filter: logoColor === "navy.700" ? "invert(0)" : null }}
+        style={{ filter: logoColor === "navy.700" ? "invert(1)" : null }}
       />
       <HSeparator mb="20px" />
     </Flex>
