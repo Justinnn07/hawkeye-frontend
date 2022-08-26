@@ -50,6 +50,7 @@ export default function ColumnsTable(props) {
   const data = useMemo(() => tableData, [tableData]);
   const [search, setSearch] = useState("");
   const [filterByState, setFilterByState] = useState("all");
+  const [filterByHour, setFilterByHour] = useState(0);
 
   const options = ["Web Channels", "News Channels"];
 
@@ -139,24 +140,41 @@ export default function ColumnsTable(props) {
                   },
                 }}
               />
-              <Select
-                w={32}
-                value={filterByState}
-                onChange={(e) => {
-                  setFilterByState(e.target.value);
-                }}
-              >
-                <option value="all">All</option>
-                {unique.map(({ Location }, index) => (
-                  <>
-                    {Location === null ? null : (
-                      <option key={index} value={Location}>
-                        {Location}
-                      </option>
-                    )}
-                  </>
-                ))}
-              </Select>
+              {pathname !== "/logs" && (
+                <Select
+                  w={32}
+                  value={filterByState}
+                  onChange={(e) => {
+                    setFilterByState(e.target.value);
+                  }}
+                >
+                  <option value="all">All</option>
+                  {unique.map(({ Location }, index) => (
+                    <>
+                      {Location === null ? null : (
+                        <option key={index} value={Location}>
+                          {Location}
+                        </option>
+                      )}
+                    </>
+                  ))}
+                </Select>
+              )}
+
+              {/* {pathname === "/logs" && (
+                <Select
+                  w={32}
+                  value={filterByHour}
+                  onChange={(e) => setFilterByHour(Number(e.target.value))}
+                >
+                  <option value={0}>All</option>
+                  <option value={1}>Last 1 Hour</option>
+                  <option value={2}>Last 2 Hour</option>
+                  <option value={3}>Last 3 Hour</option>
+                  <option value={4}>Last 4 Hour</option>
+                  <option value={5}>Last 5 Hour</option>
+                </Select>
+              )} */}
             </Flex>
           </Flex>
 
@@ -193,7 +211,7 @@ export default function ColumnsTable(props) {
             <Tbody {...getTableBodyProps()}>
               {page.length > 0 &&
                 page
-                  ?.filter((res) => {
+                  .filter((res) => {
                     return (
                       res.original.Name.toLowerCase().includes(
                         search.toLowerCase()
@@ -212,11 +230,11 @@ export default function ColumnsTable(props) {
                         .includes(search.toLowerCase())
                     );
                   })
-                  .filter((res) =>
-                    filterByState === "all"
+                  .filter((res) => {
+                    return filterByState === "all"
                       ? res
-                      : res.original.Location === filterByState
-                  )
+                      : res.original.Location === filterByState;
+                  })
                   .map((row, index) => {
                     console.log(row.original);
                     return (
